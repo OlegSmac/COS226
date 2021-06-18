@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     private int n;
-    private WeightedQuickUnionUF w;
+    private WeightedQuickUnionUF w, w_full;
     private int[] id;
     private boolean[] op;
 
@@ -14,6 +14,7 @@ public class Percolation {
             throw new IllegalArgumentException();
         }
         w = new WeightedQuickUnionUF(n * n + 2);
+        w_full = new WeightedQuickUnionUF(n * n + 2);
 
         id = new int[n * n + 2];
         for (int i = 0; i < id.length; i++) {
@@ -47,22 +48,31 @@ public class Percolation {
 
         if (row - 2 >= 0 && op[place(row - 2, col - 1)]) { // top
             w.union(place(row - 2, col - 1), pl);
+            w_full.union(place(row - 2, col - 1), pl);
         }
 
         if (row < n && op[place(row, col - 1)]) { // low
             w.union(place(row,col - 1), pl);
+            w_full.union(place(row,col - 1), pl);
         }
 
         if (col - 2 >= 0 && op[place(row - 1, col - 2)]) { // left
             w.union(place(row - 1, col - 2), pl);
+            w_full.union(place(row - 1, col - 2), pl);
         }
 
         if (col < n && op[place(row - 1, col)]) { // right
             w.union(place(row - 1, col), pl);
+            w_full.union(place(row - 1, col), pl);
         }
 
         if (row == 1) {
             w.union(id[id.length - 2], place(0,col - 1)); // high row
+            w_full.union(id[id.length - 2], place(0,col - 1)); // high row
+        }
+
+        if (row == n) {
+            w.union(id[id.length - 1], place(row - 1, col - 1)); // low row
         }
     }
 
@@ -80,12 +90,9 @@ public class Percolation {
             throw new java.lang.IllegalArgumentException();
         }
 
-        if (isOpen(row, col) && row == n) {
-            w.union(pl, id[id.length - 1]);
-        }
+        //StdOut.println("find(" + row + ", " + col + ") = " + w_full.find(pl) + " len-2 = " + w_full.find(id.length - 2));
 
-        if (isOpen(row, col) && w.find(pl) == id.length - 2) {
-            StdOut.println("find(" + row + ", " + col + ") = " + w.find(pl));
+        if (isOpen(row, col) && w_full.find(pl) == w_full.find(id.length - 2)) {
             return true;
         }
         return false;
@@ -102,11 +109,6 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        for (int i = 0; i < n; i++) {
-            if (isOpen(n, i + 1) && isFull(n, i + 1)) {
-                //return true;
-            }
-        }
         return w.connected(id[id.length - 2], id[id.length - 1]);
     }
 
