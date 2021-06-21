@@ -20,7 +20,7 @@ public class P03Successor {
     }
 
     public int findY(int x) {
-        
+
     }
 
     public static void main(String[] args) {
