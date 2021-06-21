@@ -1,31 +1,23 @@
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private int n;
-    private WeightedQuickUnionUF w, w_full;
-    private int[] id;
-    private boolean[] op;
+    private final int n;
+    private int numOp;
+    private final UnionFind w;
+    private final UnionFind w_full;
+    private final boolean[] op;
 
     public Percolation(int n) {
         this.n = n;
+
         if (n <= 0) {
             throw new IllegalArgumentException();
         }
-        w = new WeightedQuickUnionUF(n * n + 2);
-        w_full = new WeightedQuickUnionUF(n * n + 2);
-
-        id = new int[n * n + 2];
-        for (int i = 0; i < id.length; i++) {
-            id[i] = i;
-        }
+        w = new UnionFind(n * n + 2);
+        w_full = new UnionFind(n * n + 2);
 
         op = new boolean[n * n + 2];
-        for (int i = 0; i < op.length; i++) {
-            op[i] = false;
-        }
-
         op[op.length - 2] = true;
         op[op.length - 1] = true;
     }
@@ -39,40 +31,34 @@ public class Percolation {
         if (row <= 0 || col <= 0 || row > n || col > n) {
             throw new java.lang.IllegalArgumentException();
         }
+
         if (isOpen(row, col)) {
             return;
         }
         else {
             op[pl] = true;
+            numOp++;
         }
 
-        if (row - 2 >= 0 && op[place(row - 2, col - 1)]) { // top
-            w.union(place(row - 2, col - 1), pl);
-            w_full.union(place(row - 2, col - 1), pl);
-        }
-
-        if (row < n && op[place(row, col - 1)]) { // low
-            w.union(place(row,col - 1), pl);
-            w_full.union(place(row,col - 1), pl);
-        }
-
-        if (col - 2 >= 0 && op[place(row - 1, col - 2)]) { // left
-            w.union(place(row - 1, col - 2), pl);
-            w_full.union(place(row - 1, col - 2), pl);
-        }
-
-        if (col < n && op[place(row - 1, col)]) { // right
-            w.union(place(row - 1, col), pl);
-            w_full.union(place(row - 1, col), pl);
+        int[][] dpp = {{-2, -1}, {0, -1}, {-1, -2}, {-1, 0}};
+        for (int[] dp : dpp) {
+            if (row + dp[0] >= 0
+                    && col + dp[1] >= 0
+                    && row + dp[0] < n
+                    && col + dp[1] < n
+                    && op[place(row + dp[0], col + dp[1])]) { // all
+                w.union(place(row + dp[0], col + dp[1]), pl);
+                w_full.union(place(row + dp[0], col + dp[1]), pl);
+            }
         }
 
         if (row == 1) {
-            w.union(id[id.length - 2], place(0,col - 1)); // high row
-            w_full.union(id[id.length - 2], place(0,col - 1)); // high row
+            w.union(n * n, place(0,col - 1)); // high row
+            w_full.union(n * n, place(0,col - 1)); // high row
         }
 
         if (row == n) {
-            w.union(id[id.length - 1], place(row - 1, col - 1)); // low row
+            w.union(n * n + 1, place(row - 1, col - 1)); // low row
         }
     }
 
@@ -90,26 +76,15 @@ public class Percolation {
             throw new java.lang.IllegalArgumentException();
         }
 
-        //StdOut.println("find(" + row + ", " + col + ") = " + w_full.find(pl) + " len-2 = " + w_full.find(id.length - 2));
-
-        if (isOpen(row, col) && w_full.find(pl) == w_full.find(id.length - 2)) {
-            return true;
-        }
-        return false;
+        return isOpen(row, col) && w_full.find(pl) == w_full.find(n * n);
     }
 
     public int numberOfOpenSites() {
-        int count = 0;
-        for (int i = 0; i < op.length - 2; i++) {
-            if (op[i]) {
-                count++;
-            }
-        }
-        return count;
+        return numOp;
     }
 
     public boolean percolates() {
-        return w.connected(id[id.length - 2], id[id.length - 1]);
+        return w.find(n * n) == w.find(n * n + 1);
     }
 
     public static void main(String[] main) {
