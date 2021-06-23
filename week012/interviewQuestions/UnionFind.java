@@ -55,11 +55,11 @@ public class UnionFind {
         }
         count--;
 
-        if (findMax(p) < m[q]) {
-            m[findMax(p)] = m[q];
+        if (findMax(p) < findMax(q)) {
+            m[findMax(p)] = m[findMax(q)];
         }
-        else if (findMax(q) < m[p]) {
-            m[findMax(q)] = m[p];
+        else if (findMax(q) < findMax(p)) {
+            m[findMax(q)] = m[findMax(p)];
         }
     }
 
