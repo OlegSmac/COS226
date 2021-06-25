@@ -3,16 +3,13 @@ import edu.princeton.cs.algs4.StdOut;
 public class UnionFind {
     private final int[] id;
     private final int[] sz;
-    private final int[] m;
     private int count;
 
     public UnionFind(int n) {
         this.count = n;
         id = new int[n];
-        m = new int[n];
         for (int i = 0; i < n; i++) {
             id[i] = i;
-            m[i] = i;
         }
 
         sz = new int[n];
@@ -23,13 +20,6 @@ public class UnionFind {
 
     public int count() {
         return count;
-    }
-
-    public int findMax(int i) {
-        while (i != m[i]) {
-            i = m[i];
-        }
-        return i; // m[i] - max in connected component
     }
 
     public int find(int i) {
@@ -54,13 +44,6 @@ public class UnionFind {
             sz[i] += sz[j];
         }
         count--;
-
-        if (findMax(p) < findMax(q)) {
-            m[findMax(p)] = m[findMax(q)];
-        }
-        else if (findMax(p) > findMax(q)) {
-            m[findMax(q)] = m[findMax(p)];
-        }
     }
 
     public boolean connected(int p, int q) {
