@@ -3,8 +3,7 @@ import edu.princeton.cs.algs4.StdOut;
 public class UnionFind {
     private final int[] id;
     private final int[] sz;
-    private int count;
-
+    
     public UnionFind(int n) {
         this.count = n;
         id = new int[n];
@@ -16,10 +15,6 @@ public class UnionFind {
         for (int i = 0; i < n; i++) {
             sz[i] = 1;
         }
-    }
-
-    public int count() {
-        return count;
     }
 
     public int find(int i) {
