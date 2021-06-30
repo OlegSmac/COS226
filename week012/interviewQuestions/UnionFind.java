@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class UnionFind {
     private final int[] id;
-    private final int[] sz;
+    private final int[] sz; //sz[i] - число ячеек для i-ого корня
     private final int[] max; // max[i] - максимальный элемент для i-ого корня
     private int count;
 
@@ -10,19 +10,16 @@ public class UnionFind {
         this.count = n;
         id = new int[n];
         max = new int[n];
+        sz = new int[n];
         for (int i = 0; i < n; i++) {
             id[i] = i;
             max[i] = i;
-        }
-
-        sz = new int[n];
-        for (int i = 0; i < n; i++) {
             sz[i] = 1;
         }
     }
 
-    public int count() {
-        return count;
+    public int size(int i) {
+        return sz[find(i)];
     }
 
     public int findMax(int i) {
