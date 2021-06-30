@@ -5,7 +5,6 @@ public class UnionFind {
     private final int[] sz;
     
     public UnionFind(int n) {
-        this.count = n;
         id = new int[n];
         for (int i = 0; i < n; i++) {
             id[i] = i;
@@ -38,7 +37,6 @@ public class UnionFind {
             id[j] = i;
             sz[i] += sz[j];
         }
-        count--;
     }
 
     public boolean connected(int p, int q) {
