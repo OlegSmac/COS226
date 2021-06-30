@@ -6,7 +6,6 @@ public class UnionFind {
     private final int[] max; // max[i] - максимальный элемент для i-ого корня
 
     public UnionFind(int n) {
-        this.count = n;
         id = new int[n];
         max = new int[n];
         sz = new int[n];
@@ -48,7 +47,6 @@ public class UnionFind {
             sz[i] += sz[j];
             max[i] = Math.max(max[i], max[j]);
         }
-        count--;
     }
 
     public boolean connected(int p, int q) {
