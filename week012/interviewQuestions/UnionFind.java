@@ -4,7 +4,6 @@ public class UnionFind {
     private final int[] id;
     private final int[] sz; //sz[i] - число ячеек для i-ого корня
     private final int[] max; // max[i] - максимальный элемент для i-ого корня
-    private int count;
 
     public UnionFind(int n) {
         this.count = n;
