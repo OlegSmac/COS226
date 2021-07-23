@@ -66,11 +66,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return item;
     }
 
+
     public Iterator<Item> iterator() {
         return new ListIterator();
     }
 
     private class ListIterator implements Iterator<Item> {
+        private Item[] aCopy = a;
         private int i = N;
         public boolean hasNext() {
             return i > 0;
@@ -80,10 +82,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 throw new java.util.NoSuchElementException();
             }
             int idx = (int) (Math.random() * i);
-            Item item = a[--i];
-            a[i] = a[idx];
-            a[idx] = item;
-            return a[i];
+            Item item = aCopy[--i];
+            aCopy[i] =  aCopy[idx];
+            aCopy[idx] = item;
+            return aCopy[i];
         }
     }
 
@@ -96,21 +98,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
          */
 
-        q.enqueue(1);
-        q.enqueue(2);
-        q.enqueue(3);
-        q.enqueue(4);
-        q.enqueue(5);
-        q.enqueue(6);
-        q.enqueue(7);
         q.enqueue(8);
-        q.enqueue(9);
-        q.enqueue(10);
+        q.enqueue(11);
+        q.enqueue(48);
+        q.enqueue(21);
+        q.enqueue(37);
+        q.enqueue(1);
         //StdOut.println("s = " + q.sample());
-        StdOut.println("d = " + q.dequeue());
+        //StdOut.println("d = " + q.dequeue());
 
         // Iterator work
-        StdOut.print("N = " + q.N + " it = ");
+        StdOut.print("it = ");
         Iterator iterator = q.iterator();
         while (iterator.hasNext()) {
             StdOut.print(iterator.next() + " ");
