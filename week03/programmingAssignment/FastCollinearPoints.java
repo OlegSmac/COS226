@@ -32,13 +32,8 @@ public class FastCollinearPoints {
             slopes = new double[points.length];
             Point[] copyPoints = new Point[points.length];
             for (int q = 0; q < points.length; q++) {
-                if (p == q) {
-                    slopes[q] = Double.NEGATIVE_INFINITY;
-                }
-                else {
-                    slopes[q] = points[p].slopeTo(points[q]);
-                    copyPoints[q] = points[q];
-                }
+                slopes[q] = points[p].slopeTo(points[q]);
+                copyPoints[q] = points[q];
             }
             sorting(slopes, copyPoints);
             int n = 0;
