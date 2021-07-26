@@ -14,13 +14,15 @@ public class FastCollinearPoints {
         if (points == null) {
             throw new IllegalArgumentException();
         }
+        for (int i = 0; i < points.length; i++) {
+            if (points[i] == null) {
+                throw new IllegalArgumentException();
+            }
+        }
 
         ComparePoints comparePoints = new ComparePoints();
         ArrayList<Point> allColPoints = new ArrayList<Point>();
         for (int p = 0; p < points.length; p++) {
-            if (points[p] == null) {
-                throw new IllegalArgumentException();
-            }
             double[] slopes = new double[points.length];
             Point[] copyPoints = points.clone();
             for (int q = 0; q < points.length; q++) {
