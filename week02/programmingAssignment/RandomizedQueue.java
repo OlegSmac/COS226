@@ -1,54 +1,49 @@
-import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdRandom;
-
 import java.util.Iterator;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] a = (Item[]) new Object[1];
-    private int N;
-
-    private void resize(int s) {
-        Item[] copy = (Item[]) new Object[s];
-        for (int i = 0; i < N; i++) {
-            copy[i] = a[i];
-        }
-        a = copy;
-    }
+    private int n;
 
     public RandomizedQueue() {
 
     }
 
+    private void resize(int s) {
+        Item[] copy = (Item[]) new Object[s];
+        for (int i = 0; i < n; i++) {
+            copy[i] = a[i];
+        }
+        a = copy;
+    }
+
     public boolean isEmpty() {
-        return N == 0;
+        return n == 0;
     }
 
     public int size() {
-        return N;
+        return n;
     }
 
     public void enqueue(Item item) {
         if (item == null) {
             throw new IllegalArgumentException();
         }
-        if (N == a.length) {
+        if (n == a.length) {
             resize(2 * a.length);
         }
-        a[N] = item;
-        N++;
+        a[n++] = item;
     }
 
     public Item dequeue() {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
-        int idx = (int) (Math.random() * N);
+        int idx = (int) (Math.random() * n);
         Item item = a[idx];
-        a[idx] = a[N - 1];
-        a[N - 1] = null;
-        N--;
-        if (N > 0 && N == a.length / 4) {
+        a[idx] = a[n - 1];
+        a[n - 1] = null;
+        n--;
+        if (n > 0 && n == a.length / 4) {
             resize(a.length / 2);
         }
         return item;
@@ -58,11 +53,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
-        int idx = (int) (Math.random() * N);
+        int idx = (int) (Math.random() * n);
         Item item = a[idx];
-        if (N > 0 && N == a.length / 4) {
-            resize(a.length / 2);
-        }
         return item;
     }
 
@@ -72,8 +64,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     private class ListIterator implements Iterator<Item> {
-        private Item[] aCopy = a;
-        private int i = N;
+        private Item[] aCopy = (Item[]) new Object[a.length];
+        private int i = n;
+        private ListIterator() {
+            for (int j = 0; j < a.length; j++) {
+                aCopy[j] = a[j];
+            }
+        }
         public boolean hasNext() {
             return i > 0;
         }
@@ -91,27 +88,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
         RandomizedQueue<Integer> q = new RandomizedQueue<>();
-        /*
-        while (!StdIn.isEmpty()) {
-            String item = StdIn.readString();
-            r.enqueue(item);
-        }
-         */
-
         q.enqueue(8);
         q.enqueue(11);
         q.enqueue(48);
         q.enqueue(21);
         q.enqueue(37);
         q.enqueue(1);
-        //StdOut.println("s = " + q.sample());
-        //StdOut.println("d = " + q.dequeue());
-
-        // Iterator work
-        StdOut.print("it = ");
-        Iterator iterator = q.iterator();
-        while (iterator.hasNext()) {
-            StdOut.print(iterator.next() + " ");
-        }
     }
 }
