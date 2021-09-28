@@ -4,7 +4,6 @@ import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.HashSet;
 import java.util.Hashtable;
 
 public class SAP {
