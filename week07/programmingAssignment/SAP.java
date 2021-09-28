@@ -20,10 +20,10 @@ public class SAP {
         if (v > g.V() + 1 || w > g.V() + 1) throw new IllegalArgumentException();
         if (v == w) return 0;
         Queue<Integer> q = new Queue<>();
-        Hashtable<Integer, Integer> listV = new Hashtable<>();
+        Hashtable<Integer, Integer> listV = new Hashtable<>(); //(key, len to key)
         listV.put(v, 0);
         q.enqueue(v);
-        while (!q.isEmpty()) {
+        while (!q.isEmpty()) { //breadth-first search
             int node = q.dequeue();
             int len = listV.get(node);
             for (int i : g.adj(node)) {
@@ -33,10 +33,13 @@ public class SAP {
                 }
             }
         }
-        Hashtable<Integer, Integer> listW = new Hashtable<>();
+        q = new Queue<>();
+        Hashtable<Integer, Integer> listW = new Hashtable<>(); //(key, len to key)
         listW.put(w, 0);
         q.enqueue(w);
-        while (!q.isEmpty()) {
+        int minLen = g.E();
+        boolean is = false;
+        while (!q.isEmpty()) { //breadth-first search
             int node = q.dequeue();
             int len = listW.get(node);
             for (int i : g.adj(node)) {
@@ -45,18 +48,12 @@ public class SAP {
                     listW.put(i, len + 1);
                 }
             }
-        }
-        int minLen = g.E();
-        boolean is = false;
-        for (int i : listV.keySet()) {
-            for (int j : listW.keySet()) {
-                if (i == j) {
-                    int path = listV.get(i) + listW.get(j);
-                    if (path <= minLen) {
-                        is = true;
-                        minLen = path;
-                        minAnc = i;
-                    }
+            if (listV.containsKey(node)) { //find min way
+                int n = listV.get(node) + len;
+                if (n <= minLen) {
+                    is = true;
+                    minLen = n;
+                    minAnc = node;
                 }
             }
         }
