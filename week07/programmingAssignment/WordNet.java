@@ -61,7 +61,6 @@ public class WordNet {
         int a = nouns.get(nounA);
         int b = nouns.get(nounB);
         int res = sap.ancestor(a, b);
-        if (res == -1) return "-1";
         return sets.get(res);
     }
 
