@@ -8,17 +8,77 @@ import java.util.Hashtable;
 
 public class SAP {
     private Digraph g;
-    private int minAnc;
 
     public SAP(Digraph G) {
         if (G == null) throw new IllegalArgumentException();
         this.g = G;
-        this.minAnc = g.V();
     }
 
     public int length(int v, int w) {
-        if (v > g.V() + 1 || w > g.V() + 1) throw new IllegalArgumentException();
-        if (v == w) return 0;
+        if (v >= g.V() || w >= g.V()) throw new IllegalArgumentException();
+
+        Ancestor a = findAnc(v, w);
+        if (a == null) return -1;
+        else return a.distance;
+    }
+
+    public int ancestor(int v, int w) {
+        if (v >= g.V() || w >= g.V()) throw new IllegalArgumentException();
+
+        Ancestor a = findAnc(v, w);
+        if (a == null) return -1;
+        else return a.id;
+    }
+
+    public int length(Iterable<Integer> v, Iterable<Integer> w) {
+        if (v == null || w == null) throw new IllegalArgumentException();
+        Ancestor res = null;
+        for (Integer i : v) {
+            for (Integer j : w) {
+                if (i == null || j == null) throw new IllegalArgumentException();
+                Ancestor a = findAnc(i, j);
+                if (res == null) res = a;
+                else if (a.distance < res.distance) res = a;
+            }
+        }
+        if (res == null) return -1;
+        return res.distance;
+    }
+
+    public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
+        if (v == null || w == null) throw new IllegalArgumentException();
+        Ancestor res = null;
+        for (Integer i : v) {
+            for (Integer j : w) {
+                if (i == null || j == null) throw new IllegalArgumentException();
+                Ancestor a = findAnc(i, j);
+                if (res == null) res = a;
+                else if (a.distance < res.distance) res = a;
+            }
+        }
+        if (res == null) return -1;
+        return res.id;
+    }
+
+    private Ancestor findAnc(int v, int w) {
+        if (v >= g.V() || w >= g.V()) throw new IllegalArgumentException();
+        Hashtable<Integer, Integer> listV = distance(v); //(key, len to key)
+        Hashtable<Integer, Integer> listW = distance(w);
+        Ancestor minAnc = null;
+        for (int node : listV.keySet()) {
+            if (listW.containsKey(node)) { //find min way
+                int len = listV.get(node) + listW.get(node);
+                if (minAnc == null) minAnc = new Ancestor(node, len);
+                else if (len < minAnc.distance) {
+                    minAnc.id = node;
+                    minAnc.distance = len;
+                }
+            }
+        }
+        return minAnc;
+    }
+
+    private Hashtable<Integer, Integer> distance(int v) {
         Queue<Integer> q = new Queue<>();
         Hashtable<Integer, Integer> listV = new Hashtable<>(); //(key, len to key)
         listV.put(v, 0);
@@ -33,68 +93,17 @@ public class SAP {
                 }
             }
         }
-        q = new Queue<>();
-        Hashtable<Integer, Integer> listW = new Hashtable<>(); //(key, len to key)
-        listW.put(w, 0);
-        q.enqueue(w);
-        int minLen = g.E();
-        boolean is = false;
-        while (!q.isEmpty()) { //breadth-first search
-            int node = q.dequeue();
-            int len = listW.get(node);
-            for (int i : g.adj(node)) {
-                if (!listW.containsKey(i)) {
-                    q.enqueue(i);
-                    listW.put(i, len + 1);
-                }
-            }
-            if (listV.containsKey(node)) { //find min way
-                int n = listV.get(node) + len;
-                if (n <= minLen) {
-                    is = true;
-                    minLen = n;
-                    minAnc = node;
-                }
-            }
-        }
-        if (is) return minLen;
-        return -1;
+        return listV;
     }
 
-    public int ancestor(int v, int w) {
-        if (v > g.V() + 1 || w > g.V() + 1) throw new IllegalArgumentException();
-        if (v == w) return v;
-        int len = length(v, w);
-        if (len != - 1) return minAnc;
-        return -1;
-    }
+    private class Ancestor {
+        private int id;
+        private int distance;
 
-    public int length(Iterable<Integer> v, Iterable<Integer> w) {
-        if (v == null || w == null) throw new IllegalArgumentException();
-        int minLen = g.E() + 1;
-        for (Integer i : v) {
-            for (Integer j : w) {
-                if (i == null || j == null) throw new IllegalArgumentException();
-                int len = length(i, j);
-                if (len < minLen) minLen = len;
-            }
+        private Ancestor(int id, int distance) {
+            this.id = id;
+            this.distance = distance;
         }
-        if (minLen < g.E() + 1 && minLen != -1) return minLen;
-        return -1;
-    }
-
-    public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
-        if (v == null || w == null) throw new IllegalArgumentException();
-        int minLen = g.E() + 1;
-        for (Integer i : v) {
-            for (Integer j : w) {
-                if (i == null || j == null) throw new IllegalArgumentException();
-                int len = length(i, j);
-                if (len < minLen) minLen = len;
-            }
-        }
-        if (minLen < g.E() + 1 && minLen != -1) return minAnc;
-        return -1;
     }
 
     public static void main(String[] args) {
