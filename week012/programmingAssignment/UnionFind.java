@@ -1,11 +1,7 @@
 public class UnionFind {
     private final int[] id;
     private final int[] sz;
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> a1e062f5fc1bc34ab738761e0214c12a3e21b5b5
     public UnionFind(int n) {
         id = new int[n];
         for (int i = 0; i < n; i++) {
@@ -39,13 +35,10 @@ public class UnionFind {
             id[j] = i;
             sz[i] += sz[j];
         }
-<<<<<<< HEAD
-=======
     }
 
     public boolean connected(int p, int q) {
         return find(p) == find(q);
->>>>>>> a1e062f5fc1bc34ab738761e0214c12a3e21b5b5
     }
 
     public static void main(String[] args) {
