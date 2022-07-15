@@ -83,7 +83,6 @@ public class WordNet {
     // nounA and nounB
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
-<<<<<<< HEAD
         if (nounA == null) throw new IllegalArgumentException();
         if (nounB == null) throw new IllegalArgumentException();
 
@@ -94,13 +93,11 @@ public class WordNet {
         if (w == null) throw new IllegalArgumentException("nounB is not a WordNet noun");
 
         return grahIdSynset.get(sap.ancestor(v, w));
-=======
         if (!isNoun(nounA) || !isNoun(nounB)) throw new IllegalArgumentException();
         int a = nouns.get(nounA);
         int b = nouns.get(nounB);
         int res = sap.ancestor(a, b);
         return sets.get(res);
->>>>>>> 49a43a0e9629a648b7bff8a0786c26c464c2ee19
     }
 
     // do unit testing of this class
